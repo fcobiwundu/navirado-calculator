@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navirado Profit Calculator</title>
+
+    <style>
+        :root {
+            --primary: #13272B;
+            --secondary: #5B9F99;
+            --background: #F8F4F0;
+            --accent: #333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: var(--background);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            color: #555;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        label {
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--secondary);
+        }
+
+        .results {
+            margin-top: 25px;
+            display: none;
+        }
+
+        .result-box {
+            background: #f1f5f5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: var(--accent);
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Navirado Calculator</h1>
+    <p>Calculate profit distribution instantly</p>
+
+    <label for="profit">Enter Total Profit (₦)</label>
+    <input type="text" id="profit" placeholder="e.g. ₦127,400">
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div class="results" id="results">
+        <div class="result-box">
+            <span>Reinvestment (30%)</span>
+            <span class="highlight" id="reinvestment">₦0.00</span>
+        </div>
+
+        <div class="result-box">
+            <span>Partner A (60%)</span>
+            <span class="highlight" id="partnerA">₦0.00</span>
+        </div>
+
+        <div class="result-box">
+            <span>Partner B (30%)</span>
+            <span class="highlight" id="partnerB">₦0.00</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    const profitInput = document.getElementById("profit");
+
+    // FORMAT INPUT LIVE
+    profitInput.addEventListener("input", function (e) {
+        let value = e.target.value;
+
+        // Remove non-numeric characters
+        value = value.replace(/[^0-9]/g, "");
+
+        if (value === "") {
+            e.target.value = "";
+            return;
+        }
+
+        // Format with commas
+        let formatted = Number(value).toLocaleString("en-NG");
+
+        e.target.value = "₦" + formatted;
+    });
+
+    // GET RAW NUMBER FROM FORMATTED INPUT
+    function getRawNumber(value) {
+        return Number(value.replace(/[^0-9]/g, ""));
+    }
+
+    // FORMAT OUTPUT CURRENCY
+    function formatCurrency(num) {
+        return Number(num).toLocaleString('en-NG', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function calculate() {
+        let rawValue = profitInput.value;
+        let profit = getRawNumber(rawValue);
+
+        if (!profit || profit <= 0) {
+            alert("Please enter a valid profit amount");
+            return;
+        }
+
+        let reinvestment = profit * 0.30;
+        let partnerA = profit * 0.42;
+        let partnerB = profit * 0.28;
+
+        document.getElementById("reinvestment").innerText = "₦" + formatCurrency(reinvestment);
+        document.getElementById("partnerA").innerText = "₦" + formatCurrency(partnerA);
+        document.getElementById("partnerB").innerText = "₦" + formatCurrency(partnerB);
+
+        document.getElementById("results").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
